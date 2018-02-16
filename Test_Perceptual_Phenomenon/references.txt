@@ -1,0 +1,6 @@
+References :
+
+1. https://en.wikipedia.org/wiki/Stroop_effect
+2. https://www.graphpad.com/quickcalcs/pValue1/
+3. https://stackoverflow.com/questions/23228244/how-do-you-find-the-iqr-in-numpy
+4. https://stackoverflow.com/questions/6871201/plot-two-histograms-at-the-same-time-with-matplotlib
