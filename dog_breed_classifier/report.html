@@ -12210,7 +12210,8 @@ Dog face detection Inaccuracy by our harr cascade model :  12.0
 <p>Currently we are using harr feature based classifiers which is a machine learning technique. We could switch over to a CNN architecture to get better results.</p>
 <p>A Harr feature is just like a kernel (filter window) in CNN, except that in a CNN these filter values are "learned" by our n/w while a harr feature is manually determined. Here are some Haar-Features. The first two are “edge features”, used to detect edges. The third is a “line feature”, while the fourth is a “four rectangle feature”, most likely used to detected a slanted line.</p>
 <p>See Some manual harr features:</p>
-<p>&lt;a href = "<a href="https://upload.wikimedia.org/wikipedia/commons/3/31/VJ_featureTypes.svg&quot;&gt;Harr">https://upload.wikimedia.org/wikipedia/commons/3/31/VJ_featureTypes.svg&quot;&gt;Harr</a> Features&lt;/a&gt;</p>
+<p><a href="https://upload.wikimedia.org/wikipedia/commons/3/31/VJ_featureTypes.svg">https://upload.wikimedia.org/wikipedia/commons/3/31/VJ_featureTypes.svg</a></p>
+<p>&lt;img src = "./images/harr_features.jpg" width = "200"&gt;<img></p>
 <p>Haar-Features are good at detecting edges and lines. This makes it really effective in face detection.
 Eg a harr feature (2) can detect an eye.</p>
 <p>However, because Haar Features have to be determined manually, there is a certain limit to the types of things it can detect. If you give classifier (a network, or any algorithm that detects faces) edge and line features, then it will only be able to detect objects with clear edges and lines. Even as a face detector, if we manipulate the face a bit (say, cover up the eyes with sunglasses, or tilt the head to a side), a Haar-based classifier may not be able to recognize the face. A convolutional kernel, on the other hand, has a higher degree of freedom (since it’s determined by training), and could be able to recognize partially covered faces (depending on the quality of the training data).</p>
@@ -12450,8 +12451,8 @@ $$</p>
 </thead>
 <tbody>
 <tr>
-<td><img src="images/Brittany_02625.jpg" width="100"></td>
-<td><img src="images/Welsh_springer_spaniel_08203.jpg" width="200"></td>
+<td><img src="./images/Brittany_02625.jpg" width="100"></td>
+<td><img src="./images/Welsh_springer_spaniel_08203.jpg" width="200"></td>
 </tr>
 </tbody>
 </table>
@@ -12464,14 +12465,14 @@ $$</p>
 </thead>
 <tbody>
 <tr>
-<td><img src="images/Curly-coated_retriever_03896.jpg" width="200"></td>
+<td><img src="./images/Curly-coated_retriever_03896.jpg" width="200"></td>
 <td><img src="images/American_water_spaniel_00648.jpg" width="200"></td>
 </tr>
 </tbody>
 </table>
 <p>Likewise, recall that labradors come in yellow, chocolate, and black.  Your vision-based algorithm will have to conquer this high intra-class variation to determine how to classify all of these different shades as the same breed.</p>
 <p>Yellow Labrador | Chocolate Labrador | Black Labrador</p>
-<p><img src="images/Labrador_retriever_06457.jpg" width="150"> | <img src="images/Labrador_retriever_06455.jpg" width="240"> | <img src="images/Labrador_retriever_06449.jpg" width="220"></p>
+<p><img src="./images/Labrador_retriever_06457.jpg" width="150"> | <img src="./images/Labrador_retriever_06455.jpg" width="240"> | <img src="images/Labrador_retriever_06449.jpg" width="220"></p>
 <p>We also mention that random chance presents an exceptionally low bar: setting aside the fact that the classes are slightly imabalanced, a random guess will provide a correct answer roughly 1 in 133 times, which corresponds to an accuracy of less than 1%.</p>
 <p>Remember that the practice is far ahead of the theory in deep learning.  Experiment with many different architectures, and trust your intuition.  And, of course, have fun!</p>
 <h3 id="Pre-process-the-Data">Pre-process the Data<a class="anchor-link" href="#Pre-process-the-Data">&#182;</a></h3><p>We rescale the images by dividing every pixel in every image by 255.</p>
@@ -12563,7 +12564,7 @@ $$</p>
 
 </code></pre>
 <p>We have imported some Python modules to get you started, but feel free to import as many modules as you need.  If you end up getting stuck, here's a hint that specifies a model that trains relatively fast on CPU and attains &gt;1% test accuracy in 5 epochs:</p>
-<p><img src="images/sample_cnn.png" alt="Sample CNN"></p>
+<p><img src="./images/sample_cnn.png" alt="Sample CNN"></p>
 <p><strong>Question 4:</strong> Outline the steps you took to get to your final CNN architecture and your reasoning at each step.  If you chose to use the hinted architecture above, describe why you think that CNN architecture should work well for the image classification task.</p>
 <p><strong>Answer:</strong></p>
 <p>I opted for a pretty similar architecture as given above (i.e a series of convolutional layers to detect features and max pooling layers in b/w to bring down the dimensionality). The only thing I changed was adding additional convolutional layers for identifying much more complex features.</p>
