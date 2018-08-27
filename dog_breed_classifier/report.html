@@ -12209,7 +12209,8 @@ Dog face detection Inaccuracy by our harr cascade model :  12.0
 <p>No, this is not a reasonable expectation to make.</p>
 <p>Currently we are using harr feature based classifiers which is a machine learning technique. We could switch over to a CNN architecture to get better results.</p>
 <p>A Harr feature is just like a kernel (filter window) in CNN, except that in a CNN these filter values are "learned" by our n/w while a harr feature is manually determined. Here are some Haar-Features. The first two are “edge features”, used to detect edges. The third is a “line feature”, while the fourth is a “four rectangle feature”, most likely used to detected a slanted line.</p>
-<p>&lt;img src = "harr_features.PNG" width = "200"&gt;</p>
+<p>See Some manual harr features:</p>
+<p>&lt;a href = "<a href="https://upload.wikimedia.org/wikipedia/commons/3/31/VJ_featureTypes.svg&quot;&gt;Harr">https://upload.wikimedia.org/wikipedia/commons/3/31/VJ_featureTypes.svg&quot;&gt;Harr</a> Features&lt;/a&gt;</p>
 <p>Haar-Features are good at detecting edges and lines. This makes it really effective in face detection.
 Eg a harr feature (2) can detect an eye.</p>
 <p>However, because Haar Features have to be determined manually, there is a certain limit to the types of things it can detect. If you give classifier (a network, or any algorithm that detects faces) edge and line features, then it will only be able to detect objects with clear edges and lines. Even as a face detector, if we manipulate the face a bit (say, cover up the eyes with sunglasses, or tilt the head to a side), a Haar-based classifier may not be able to recognize the face. A convolutional kernel, on the other hand, has a higher degree of freedom (since it’s determined by training), and could be able to recognize partially covered faces (depending on the quality of the training data).</p>
