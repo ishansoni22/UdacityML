@@ -1,12 +1,19 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Proposal
-Ishan Soni  
-November 13th, 2018
+
+Ishan Soni </br>
+December 16th, 2018.
+
 
 # Proposal
 ## Toxic Comment Classification on social media platforms
 
+
 ### **Domain Background**
+
+My project draws upon the domain of document classification with an emphasis on the natural language processing component of document classification. Machine learning has been successfully used to classify documents by topic for several decades. However, machine learning techniques do not perform as well when performing sentiment analysis which requires the parsing of more complex language structures. This is where ideas from natural language processing must be applied.
+My aim with this project is to make progress towards solving a complex natural language processing problem using machine learning. I think that it would be very beneficial if computers could interpret and produce the same kind of natural language of which even young children are capable. This would allow machine learning to be applied to a wider variety of tasks than it is currently capable of solving. In particular, machine learning could be applied to many problems that are not well structured and for which there is not much training data.
+
 This capstone project is based on the [Toxic Comment Classification Challenge](https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge)
 
 Discussing things you care about can be difficult. The threat of abuse and harassment online means that many people stop expressing themselves and give up on seeking different opinions. Platforms struggle to effectively facilitate conversations, leading many communities to limit or completely shut down user comments.
@@ -15,10 +22,14 @@ The Conversation AI team, a research initiative founded by Jigsaw and Google (bo
 
 With more people joining social media than ever before, it becomes imperative that this problem is solved. Classifying toxic comments (obscene, threat, insult, identity-based hate) will be the core of this project.
 
+
 ### **Problem Statement**
 
-In this project, I will build a multi-headed model that will be capable of detecting different types of toxicity like threats, obscenity, insults, and identity-based hate. I’ll be using a dataset of comments from Wikipedia’s talk page edits. Improvements to the current models will hopefully help online discussion become more productive and respectful.
+In this project, I will build a multi-headed model that will be capable of detecting different types of toxicity like threats, obscenity, insults, and identity-based hate from a given comment. I’ll be using a dataset of comments from Wikipedia’s talk page edits. Improvements to the current models will hopefully help online discussion become more productive and respectful.
 
+This is a supervised multi-class classification problem and as such different measurable evaluation metrics could be applied. These will be further elaborated in Section 6 - Evaluation Metrics. Given a comment, the solution will be a machine learning model that receives as input the comment and outputs either a class prediction or a class probabilty for every toxicity type.
+
+</br></br></br>
 ### **Datasets and Inputs**
 
 I’ll be using a dataset of comments from Wikipedia’s talk page edits which have been labeled by human raters for toxic behavior.
@@ -39,33 +50,111 @@ The data files are uploaded in the data folder. The following files are present 
 
 First two rows from the train dataset :
 
-| `id`                | `comment_text`                                  | toxic | severe_toxic | obscene | threat | insult | identity_hate|   
-| --------------------|:-----------------------------------------------:| -----:|        -----:|   -----:|  -----:|  -----:|       -----: |
-| 0000997932d777bf    | You, sir, are my hero. Any chance ...           | $1600 |       0      |    0    |    0   |    0   |      0       |
-| 000103f0d9cfb60f    | COCKSUCKER BEFORE YOU PISS AROUND ON MY WORK	|   $12 |       1      |    1    |    0   |    1   |      0       |
+| `id`                | `comment_text`                                  |`toxic`|`severe_toxic`|`obscene`|`threat`|`insult`|`identity_hate`|   
+| --------------------|:-----------------------------------------------:| -----:|-------------:|--------:|-------:|-------:|--------------:|
+| 0000997932d777bf    | You, sir, are my hero. Any chance ...           | $1600 |       0      |    0    |    0   |    0   |      0        |
+| 000103f0d9cfb60f    | COCKSUCKER BEFORE YOU PISS AROUND ON MY WORK	|   $12 |       1      |    1    |    0   |    1   |      0        |
 
+Given the scope of the problem, it is very appropriate to use this data set, as it conforms exactly to the problem statement from Section 2.
 
-In this section, the dataset(s) and/or input(s) being considered for the project should be thoroughly described, such as how they relate to the problem and why they should be used. Information such as how the dataset or input is (was) obtained, and the characteristics of the dataset or input, should be included with relevant references and citations as necessary It should be clear how the dataset(s) or input(s) will be used in the project and whether their use is appropriate given the context of the problem.
 
 ### **Solution Statement**
-_(approx. 1 paragraph)_
 
-In this section, clearly describe a solution to the problem. The solution should be applicable to the project domain and appropriate for the dataset(s) or input(s) given. Additionally, describe the solution thoroughly such that it is clear that the solution is quantifiable (the solution can be expressed in mathematical or logical terms) , measurable (the solution can be measured by some metric and clearly observed), and replicable (the solution can be reproduced and occurs more than once).
+The solution to this problem will be an algorithm that takes as input a list of comments and outputs a probability for each of the six possible types of comment toxicity (`toxicity_type`)  : toxic, severe_toxic, obscene, threat, insult, identity_hate for each comment. 
+This confidence score could be expressed as y ̂ ϵ [1,0] where a score of 1 indicates that the algorithm has perfect confidence that the observation deserves the label of that `toxicity_type` and a score of 0 indicates that the algorithm is perfectly confident that the observations should be not labeled with that `toxicity_type`. These confidence scores could help diagnose the algorithm and allow it to be applied in different settings.
+
+Example 1:
+Input Text : `You, sir, are my hero` 
+Output will be : toxic : 0.1 , obscence : 0.0, ..
+The output states that the algorithm thinks that there is a 0.1 probability or 10% chance that the given text is toxic. 
+Similarly the algorithm thinks that there is 0 probability or 0% chance that this text is obscene.
+
+Example 2:
+Input Text : `Oh my, you are so fuckable.` 
+Output will be : toxic : 0.1 , obscence : 0.8, ..
+The output states that the algorithm thinks that there is a 0.1 probability or 10% chance that the given text is toxic. 
+Similarly the algorithm thinks that there is 0.8 probability or 80% chance that this text is obscene. These class probabilities will enable us to make many smart decisions. Such a comment should be fine on a platform that tolerates obscenity. Such platforms can use this class probability and mark this post as `NSFW`. Other platforms that don't tolerate obscenity can chose to delete such comments automatically.
+
+Generally, if the class probability for a particular type of toxicity is > 0.5, we will label it as a toxic comment with that toxicity type. 
+
 
 ### **Benchmark Model**
-_(approximately 1-2 paragraphs)_
 
-In this section, provide the details for a benchmark model or result that relates to the domain, problem statement, and intended solution. Ideally, the benchmark model or result contextualizes existing methods or known information in the domain and problem given, which could then be objectively compared to the solution. Describe how the benchmark model or result is measurable (can be measured by some metric and clearly observed) with thorough detail.
+The simplest benchmark model would be one that always predicts the most commonly occurring class. Such a model would output the same result for every submission without considering the textual context. This is a very simple benchmark, but it is imperative that the final model should be able to beat this benchmark.
+Due to the simplicity of the above benchmark, it is important to have a second, more advanced benchmark. A slightly more complicated benchmark would be a logistic model that takes as input a bag of words structured into a document term matrix. As stated in Joulin et al. (2016) : linear classifiers that use bag of words features are a strong baseline.
+
 
 ### **Evaluation Metrics**
-_(approx. 1-2 paragraphs)_
 
-In this section, propose at least one evaluation metric that can be used to quantify the performance of both the benchmark model and the solution model. The evaluation metric(s) you propose should be appropriate given the context of the data, the problem statement, and the intended solution. Describe how the evaluation metric(s) are derived and provide an example of their mathematical representations (if applicable). Complex evaluation metrics should be clearly defined and quantifiable (can be expressed in mathematical or logical terms).
+There are many different metrics that could be used to evaluate the solution, given that this is a multi-class classification problem. The most common metric is accuracy. We can create a confusion matrix for each toxicity type and study the algorithm's accuracy for that toxicity type. 
+
+Generally, if the class probability for a particular type of toxicity is > 0.5, we will label it as a toxic comment with that toxicity type. Therefore we can easily build a confusion matrix for each toxicity class.
+
+![Confusion Matrix](https://cdn-images-1.medium.com/max/1600/1*g5zpskPaxO8uSl0OWT4NTQ.png)
+
 
 ### **Project Design**
-_(approx. 1 page)_
 
-In this final section, summarize a theoretical workflow for approaching a solution given the problem. Provide thorough discussion for what strategies you may consider employing, what analysis of the data might be required before being used, or which algorithms will be considered for your implementation. The workflow and discussion that you provide should align with the qualities of the previous sections. Additionally, you are encouraged to include small visualizations, pseudocode, or diagrams to aid in describing the project design, but it is not required. The discussion should clearly outline your intended workflow of the capstone project.
+I plan to build my models in python using scikit-learn (sklearn). Sklearn is a comprehensive machine learning library that includes many models and tools that are useful in building a machine learning pipeline. I will use sklearn to develop and test several different models that use bag of words features, ngrams etc including the baseline logistic classifier.
+
+We will use the following workflow :
+
+1. We will first start with cleaning the train and test data. In this step we will try to reduce the matrix sparsity of the bag of words and ngrams representations of our data so that our algorithms can train faster and perform better. Cleaning will include :
+    1. Removing stopwords. These are commonly occuring words like a, the, in etc that will not contribute anything towards our analysis.
+    2. Performing stemming and/or lemma. Stemming is the process of reducing inflected (or sometimes derived) words to their word stem, base or root form. Eg love, loved and loving mean the same thing and performing a stem operation on them will reduce all of them into the same root form 'lov'. This will further reduce our vocab and reduce the matrix sparsity of our bag of words/ ngrams representations.
+
+2. We will then tokenize our train and test data into representations that can be used by machine learning algorithms. These representations include bag of words, ngrams etc.
+
+3. We will then apply several machine learning models on the vectorized representations of our train data. We will use models like our baseline logistic classifier, MultinomialNB etc
+
+4. We will then perform hyperparamter tuning (eg Grid Search) to find the best model. We will combine Grid search with cross validation so that we do not end up with an overfitted model.
+
+5. We will then test the accuracy of our final models using the evaluation metrics specified above and pick the best one.
+
+@startuml
+
+scale max 600 width
+
+title Workflow
+
+cloud "Clean" {
+  component "Remove Stopwords"
+  component "Steming/ Lemma"
+  component "Step 1"
+}
+
+cloud "Tokenization" {
+  component "Step 2"
+  component "Bag of Words"
+  component "ngrams"
+}
+
+cloud "Model Application" {
+  component "Step 3"
+  component "Train Data"
+  component "Logistic classifier"
+  component "MultinomialNB etc"
+}
+
+cloud "Hyperparameter Tuning" {
+  component "Step 4"  
+  component "Grid Search"
+  component "Cross Validation" 
+}
+
+cloud "Evaluation" {
+  component "Test Data"
+  component "Step 5"
+  component "Final Model" 
+}
+' links
+[Step 1] --> [Step 2]
+[Step 2] --> [Step 3]
+[Step 3] --> [Step 4]
+[Step 4] --> [Step 5]
+
+@enduml
+
 
 -----------
 
