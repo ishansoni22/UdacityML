@@ -1,6 +1,8 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Project
 
+<hr>
+
 This github repository contains my final project for Udacity's Machine Learning Advanced Nanodegree.
 
 This repository contains the following files/ directories :
