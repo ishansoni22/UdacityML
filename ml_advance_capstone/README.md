@@ -1,17 +1,16 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Project
+This github repository contains my final project for Udacity's Machine Learning Advanced Nanodegree.
 
 <hr>
 
-This github repository contains my final project for Udacity's Machine Learning Advanced Nanodegree.
-
 This repository contains the following files/ directories :
 
-1. *proposal.pdf* : The Machine Learning Engineer Nanodegree Capstone project proposal.
-2. *data Folder* : This folder contains the data files (train + test) required for this capstone project.
-3. *notebook.ipynb* : The jupyter notebook that contains the code for running the project.
-4. *report.pdf* : The capstone project report addressing the five major project development stages.
-5. *README.md* : The current file. It contains description about the capstone project and how to set it up locally.
+1. `proposal.pdf` : The Machine Learning Engineer Nanodegree Capstone project proposal.
+2. `data Folder` : This folder contains the data files (train + test) required for this capstone project.
+3. `notebook.ipynb` : The jupyter notebook that contains the code for running the project.
+4. `report.pdf` : The capstone project report addressing the five major project development stages.
+5. `README.md` : The current file. It contains description about the capstone project and how to set it up locally.
 
 ## Project Setup
 #### Kaggle : 
