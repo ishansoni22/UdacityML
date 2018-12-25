@@ -50,21 +50,9 @@ workon <env-name>.
 ```
 8. Install the necessary dependencies.
 ```
-pip install numpy matplotlib pandas scipy scikit-learn seaborn jupyter wordcloud nltk
+pip install numpy matplotlib pandas scipy scikit-learn seaborn jupyter wordcloud nltk scikit-plot
 ```
 9. Start up jupyter notebook.
 ```
 jupyter notebook
 ```
-
-
-
-
-
-
-
-
-
-
-
-
