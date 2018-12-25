@@ -25,7 +25,7 @@ With more people joining social media than ever before, it becomes imperative th
 
 In this project, I will build a multi-headed model that will be capable of detecting different types of toxicity like threats, obscenity, insults, and identity-based hate from a given comment. I’ll be using a dataset of comments from Wikipedia’s talk page edits which have been labeled by human raters for toxic behavior. Improvements to the current models will hopefully help online discussion become more productive and respectful.
 
-This is a supervised multi-class classification problem and as such different measurable evaluation metrics could be applied. I'll be using the AUC-ROC metric to measure the efficiency of my models. Given a comment, the solution will be a machine learning model that receives as input the comment and outputs a class probabilty for every toxicity type [_toxicity_type_] : toxic, severe_toxic, obscene, threat, insult, identity_hate.
+This is a supervised multi-class classification problem and as such different measurable evaluation metrics can be applied. I'll be using the AUC-ROC metric to measure the efficiency of my models. Given a comment, the solution will be a machine learning model that receives as input the comment and outputs a class probabilty for every toxicity type [_toxicity_type_] : toxic, severe_toxic, obscene, threat, insult, identity_hate.
 
 <u>Example 1</u></br>
 Input Text : _You, sir, are my hero!_</br>
@@ -63,7 +63,7 @@ The ROC curve is plotted with TPR(True Positive Rate) against the FPR(False Posi
 
 An excellent model has AUC near to 1 which means it has a good measure of separability. A poor model has AUC near to the 0 which means it has worst measure of separability. In fact it means it is reciprocating the result. It is predicting 0s as 1s and 1s as 0s. And when AUC is 0.5, it means our model has no class separation capacity whatsoever.
 
-![AUC](./images/auc.png)
+![AUC](./images/auc-sample.png)
 
 Since our models will output probabilities, the AUC-ROC which is based on probability distributions will prove to be the correct metric. We will be using the AUC-ROC score while we cross validate our models.
 
@@ -102,7 +102,7 @@ Each train observation corresponds to a different comment. There are a total of 
         <tr>
             <td>comment_text</td>
             <td>string</td>
-            <td>The comment text we need to evaluate</td>
+            <td>The comment text that is rated/td>
         <tr>
         <tr>
             <td>toxic</td>
@@ -220,26 +220,27 @@ From the above visualizations, we can see the most common words for each toxicit
 
 Since we have defined our solution as : _Given a comment, the solution will be a machine learning model that receives as input the comment and outputs a class probabilty for every toxicity type_, I will use machine learning algorithms that can output probabilities. I will be employing two algorithms to solve the problem : linear models and MultinomialNB (Naive Bayes classifier for multinomial models).
 
-The linear logistic regression will form my benchmark. I will also use it for my actual model. Linear logistic regression is a good benchmark because it is simple and does not require the tuning of many hyperparameters. It is also fast to train and robust to noisy data. The expectation is that the more complex Logistic Regression model (after hyperparameter optimization and feature transformations) and MultinomialNB model should achieve superior performances.
+1. The Linear Logistic Regression model will form my benchmark. I will also use it for my actual model. Linear logistic regression is a good benchmark because it is simple and does not require the tuning of many hyperparameters. It is also fast to train and robust to noisy data. The expectation is that the more complex Logistic Regression model (after hyperparameter optimization and feature transformations) and MultinomialNB model should achieve superior performances.
 
-Naive Bayes is a family of algorithms based on applying Bayes theorem with a strong(naive) assumption, that every feature is independent of the others, in order to predict the category of a given sample. They are probabilistic classifiers, therefore will calculate the probability of each category using Bayes theorem. The multinomial Naive Bayes classifier is suitable for classification with discrete features (e.g., word counts for text classification). The multinomial distribution normally requires integer feature counts. However, in practice, fractional counts such as tf-idf may also work. We do have other alternatives when coping with NLP problems, such as Support Vector Machine (SVM) and neural networks. However, the simple design of Naive Bayes classifiers make them very attractive for such classifiers. Moreover, they have been demonstrated to be fast, reliable and accurate in a number of applications of NLP.
+2. Naive Bayes is a family of algorithms based on applying Bayes theorem with a strong(naive) assumption, that every feature is independent of the others, in order to predict the category of a given sample. They are probabilistic classifiers, therefore will calculate the probability of each category using Bayes theorem. The multinomial Naive Bayes classifier is suitable for classification with discrete features (e.g., word counts for text classification). The multinomial distribution normally requires integer feature counts. However, in practice, fractional counts such as tf-idf may also work. We do have other alternatives when coping with NLP problems, such as Support Vector Machine (SVM) and neural networks. However, the simple design of Naive Bayes classifiers make them very attractive for such classifiers. Moreover, they have been demonstrated to be fast, reliable and accurate in a number of applications of NLP.
 
 
 ### **Benchmark**
 
-The linear logistic regression (LogisticRegression) from the sklearn.linear_model package will form my benchmark. Linear logistic regression is a good benchmark because it is simple and does not require the tuning of many hyperparameters. It is also fast to train and robust to noisy data. 
+The Linear Logistic Regression (LogisticRegression) from the sklearn.linear_model package will form my benchmark. Linear logistic regression is a good benchmark because it is simple and does not require the tuning of many hyperparameters. It is also fast to train and robust to noisy data. 
 
 This benchmark model is trained on a Bag of Words representation of our data. 
 
-The Bag Of Word representation was created during the sklearn.feature_extraction.text.CountVectorizer. It was instantiated using the following parameters
+The Bag Of Word representation was created during the sklearn.feature_extraction.text.CountVectorizer. It was instantiated using the following parameters:
 
 | Argument     | Value  | Explanation                                                 |
 |--------------|--------|-------------------------------------------------------------|
-| min_df       | 5      | Only retain terms that appear in atleast 5 comments         |
+| analyzer     | "word" | For creating word features                                  |
+| min_df       | 5      | Only retain terms/words that appear in atleast 5 comments   |
 | ngram_range  | (1, 1) | Create ngrams of 1 word each                                |
-| max_features | 10000  | Only include the top 10000 terms ordered by term frequency. |
+| max_features | 10000  | Only include the top 10000 words ordered by word frequency. |
 
-We train this model on our bag of words representation and use cross validation to ensure our model is not overfit. The average cross-validated AUC-ROC score we get for this benchmark model on our train data is around **0.94**. This benchmark model gives us a Kaggle score of **0.9376**.
+We train this model on our bag of words representation and use cross validation to ensure our model is not overfit. The average cross-validated AUC-ROC score we get for this benchmark model on our train data is around **0.94**. This benchmark model gives us a Kaggle score of **0.93**.
 
 
 ## III. Methodology
@@ -253,9 +254,9 @@ Before we predict probabilities for each toxicity class using our machine learni
 2. Tfidf : TFIDF, short for term frequency–inverse document frequency, is a numerical statistic that is intended to reflect how important a word is to a document in a collection or corpus.
 [Tf-idf](https://en.wikipedia.org/wiki/Tf%E2%80%93idf)
 
-Both of these vectorized representations are very sparse matrices. Therefore we need to reduce the number of features we have in these representations by reducing our vocabulary. We do this by removing words that are not relevant and by converting different words that convey the same meaning into the single same word. 
+Both of these vectorized representations are very sparse matrices. Therefore we need to reduce the number of features we have in these representations by reducing our vocabulary. We do this by removing words that are not relevant and by converting different words that convey the same meaning into a single same word. 
 
-As identified during Data Exploration, there were a lot of / n's and a lot of usernames in our comment text. We have removed these unnecessary words during our Data Cleaning phase.</br></br></br></br>
+As identified during Data Exploration, there were a lot of / n's and a lot of usernames in our comment text. We have removed these unnecessary words during our Data Cleaning phase.
 
 ```python
 train['comment_text'] = train['comment_text'].map(lambda x: re.sub('\\n',' ',str(x)))
@@ -270,7 +271,9 @@ _Stemming_ is the process of reducing inflected (or sometimes derived) words to 
 The following function was used to remove stopwords and perform stemming :
 
 ```python
+
 import string
+# nltk nlp library
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 
@@ -281,71 +284,116 @@ s = SnowballStemmer("english")
 def cleanComment(comment):
     comment = comment.translate(str.maketrans('', '', string.punctuation))
     words = [s.stem(w.lower()) for w in word_tokenize(comment) if w.lower() not in stopwords.words("english")]
+
     return " ".join(words)
+    
 ```
 
 
 ### **Implementation**
 
-In this section, the process for which metrics, algorithms, and techniques that you implemented for the given data will need to be clearly documented. It should be abundantly clear how the implementation was carried out, and discussion should be made regarding any complications that occurred during this process. Questions to ask yourself when writing this section:
-- _Is it made clear how the algorithms and techniques were implemented with the given datasets or input data?_
-- _Were there any complications with the original metrics or techniques that required changing prior to acquiring a solution?_
-- _Was there any part of the coding process (e.g., writing complicated functions) that should be documented?_
+I trained two models (Logistic Regression and MultinominalNB) on our new feature set which was created by combining word and char feature vectors.
 
-### Refinement
-In this section, you will need to discuss the process of improvement you made upon the algorithms and techniques you used in your implementation. For example, adjusting parameters for certain models to acquire improved solutions would fall under the refinement category. Your initial and final solutions should be reported, as well as any significant intermediate results as necessary. Questions to ask yourself when writing this section:
-- _Has an initial solution been found and clearly reported?_
-- _Is the process of improvement clearly documented, such as what techniques were used?_
-- _Are intermediate and final solutions clearly reported as the process is improved?_
+The word features were created using the TfidfVectorizer from the sklearn.feature_extraction.text package. This class creates a tf-idf vectorized format (as opposed to the Bag of Words we used for our baseline model). It was instantiated using the following parameters :
+</br></br>
+| Argument     | Value   | Explanation                                                 |
+|--------------|---------|-------------------------------------------------------------|
+| analyzer     | "word"  | For creating word features                                  |
+| min_df       | 5       | Only retain terms/words that appear in atleast 5 comments   |
+| ngram_range  | (1, 1)  | Create ngrams of 1 word each                                |
+| max_features | 10000   | Only include the top 10000 words ordered by word frequency. |
+| strip_accents|"unicode"| Strip accented characters eg à                              |
+| token_pattern|r'``\``w{1,}'| Features will only be word characters   [a-zA-Z0-9_]    |
+
+The char features were also created using the TfidfVectorizer from the sklearn.feature_extraction.text package. People often try to obfuscate bad words with additional characters. Using character n-grams can potentially detect those. It was instantiated using the following parameters :
+
+| Argument     | Value   | Explanation                                                  |
+|--------------|---------|--------------------------------------------------------------|
+| analyzer     | "char"  | For creating character features                              |
+| ngram_range  | (2, 6)  | Create ngrams of 2-6 characters each                         |
+| max_features | 30000   | Only include the top 30000 char n-grams ordered by frequency.|
+| strip_accents|"unicode"| Strip accented characters eg à                               |
+
+These two feature vectors were combined using the _scipy.sparse.hstack_ and then fed into our machine learning models.
+
+1. _MultinominalNB_ : The MultinominalNB model was developed using the sklearn package. The model was trained for each class individually using a for loop by fitting the new train feature set we created above and the individual toxicity class values. It was done using the fit() method. We then calculated the cross validated AUC-ROC score for each toxicity class. The AUC-ROC was then averaged over all toxicity classes to get the final score. The MultinominalNB model achieved an AUC-ROC score of **0.9522**. I also predicted the toxicity values for the test/holdout dataset using the model's predict() method and submitted the predictions to Kaggle. This model achieved a Kaggle score of **0.9487**.
+
+2. _Logistic Regression_ : The Logistic Regression model was again developed using the sklearn package. The model was trained for each class individually using a for loop by fitting the new train feature set we created above and the individual toxicity class values. It was done using the fit() method. We then calculated the cross validated AUC-ROC score for each toxicity class. The AUC-ROC was then averaged over all toxicity classes to get the final score. The Logistic Regression model achieved an AUC-ROC score of **0.982**. I also predicted the toxicity values for the test/holdout dataset using the model's predict() method and submitted the predictions to Kaggle. This model achieved a Kaggle score of **0.9778**.
+</br></br></br></br>
+Below is the score comparison of all our models :
+![score](./images/modelComparison.png)
+
+
+### **Refinement**
+
+Our Logistic Regression model had the best AUC-ROC score. I then performed Grid Search on our Logistic Regression model to find the best set of hyperparameters given our feature vectors.
+I used the GridSeachCV from the sklearn.model_selection package to find the best hyperparameters.
+
+Grid Search performs an exhaustive sweep through a manually specified subset of the hyperparameter space of a learning algorithm. The grid search algorithm was guided by the AUC-ROC performance metric, measured by cross-validation on the training set. The k value for cross validation was kept at 3.
+
+The manually specified hyperparameters were :
+1. C : Inverse of regularization strength. Smaller values specify stronger regularization. Values given [0.1, 0.5, 1.0]
+2. solver : Algorithm to use in the optimization problem. Values given ['liblinear', 'sag']
+
+The best hyperparameters came out to be C = 1 and solver = 'sag'.
+The final model created using the above hyperparameters has an average AUC-ROC of **0.983** and a Kaggle score of **0.9778**.
+
+The improvement is almost negligible from the initial Logistic Regression model.
 
 
 ## IV. Results
-_(approx. 2-3 pages)_
 
-### Model Evaluation and Validation
-In this section, the final model and any supporting qualities should be evaluated in detail. It should be clear how the final model was derived and why this model was chosen. In addition, some type of analysis should be used to validate the robustness of this model and its solution, such as manipulating the input data or environment to see how the model’s solution is affected (this is called sensitivity analysis). Questions to ask yourself when writing this section:
-- _Is the final model reasonable and aligning with solution expectations? Are the final parameters of the model appropriate?_
-- _Has the final model been tested with various inputs to evaluate whether the model generalizes well to unseen data?_
-- _Is the model robust enough for the problem? Do small perturbations (changes) in training data or the input space greatly affect the results?_
-- _Can results found from the model be trusted?_
+### **Model Evaluation and Validation**
 
-### Justification
-In this section, your model’s final solution and its results should be compared to the benchmark you established earlier in the project using some type of statistical analysis. You should also justify whether these results and the solution are significant enough to have solved the problem posed in the project. Questions to ask yourself when writing this section:
-- _Are the final results found stronger than the benchmark result reported earlier?_
-- _Have you thoroughly analyzed and discussed the final solution?_
-- _Is the final solution significant enough to have solved the problem?_
+As indicated in the Implementation and Refinement section, the model with the best AUC-ROC was the _Logistic Regression model_ with hyperparameters C = 1 and solver = 'sag'. C = 1 is often the best choice and solver = 'sag' came as no suprise since 'sag' is faster/better for larger datasets. Also since feature scaling wasn't an issue in our case since all features were nearly at the same scale, sag's fast convergence can be guaranteed.
+
+The model's robustness can be clearly seen using the Kaggle scores it has achieved. These scores are calculated against unseen/holdout data and looking at these scores, we can see that the model generalizes well to unseen data.
+
+Our Basline Logistic Regression model had an AUC-ROC score of 0.94 and a Kaggle score of 0.93.
+Our MultinominalNB model had an AUC-ROC score of 0.9522 and a Kaggle score of 0.9487.
+Our final Logistic Regression model has an AUC-ROC score of 0.983 and a Kaggle score of 0.9778 which is clearly better than both the above models.
+
+Also to further test out the robustness of our final model, I tested the final model on some unseen comments from youtube and I am pretty satisfied with them. Here are the results : 
+
+![unseen](./images/unseen.png)
+
+
+### **Justification**
+
+The final Logistic Regression model has an AUC-ROC score of _0.983_ which is better then the benchmark model's AUC-ROC score of _0.94_.
+As indicated in the _Metrics_ section, a higher AUC-ROC score means a better model. The Area under curve in the ROC graph for our final model is 0.983 while that of the benchmark model is 0.94. Our final model has better class separation qualities than our benchmark model.
 
 
 ## V. Conclusion
-_(approx. 1-2 pages)_
 
-### Free-Form Visualization
-In this section, you will need to provide some form of visualization that emphasizes an important quality about the project. It is much more free-form, but should reasonably support a significant result or characteristic about the problem that you want to discuss. Questions to ask yourself when writing this section:
-- _Have you visualized a relevant or important quality about the problem, dataset, input data, or results?_
-- _Is the visualization thoroughly analyzed and discussed?_
-- _If a plot is provided, are the axes, title, and datum clearly defined?_
+### **Free-Form Visualization**
 
-### Reflection
-In this section, you will summarize the entire end-to-end problem solution and discuss one or two particular aspects of the project you found interesting or difficult. You are expected to reflect on the project as a whole to show that you have a firm understanding of the entire process employed in your work. Questions to ask yourself when writing this section:
-- _Have you thoroughly summarized the entire process you used for this project?_
-- _Were there any interesting aspects of the project?_
-- _Were there any difficult aspects of the project?_
-- _Does the final model and solution fit your expectations for the problem, and should it be used in a general setting to solve these types of problems?_
+The following chart displays the Receiver Operating Characterstic (ROC) curve for all the 6 toxicity classes for our final Logistic Regression model. Our final model performs pretty good for all the 6 toxicity classes despite the class imbalance problem we discussed earlier. Since the distribution of toxicity types was very uneven, I thought our model would do poorly on some classes like Threat and Severe Toxic, but it was not the case. 
 
-### Improvement
-In this section, you will need to provide discussion as to how one aspect of the implementation you designed could be improved. As an example, consider ways your implementation can be made more general, and what would need to be modified. You do not need to make this improvement, but the potential solutions resulting from these changes are considered and compared/contrasted to your current solution. Questions to ask yourself when writing this section:
-- _Are there further improvements that could be made on the algorithms or techniques you used in this project?_
-- _Were there algorithms or techniques you researched that you did not know how to implement, but would consider using if you knew how?_
-- _If you used your final solution as the new benchmark, do you think an even better solution exists?_
+![model-auc](./images/auc.png)
+
+### **Reflection**
+
+The process used for this project can be summarized using the following steps :
+
+1. An initial problem and relevant, public datasets were found.
+2. The data was downloaded, examined, cleaned and converted into a vectorized representation that could be ingested by our classifiers.
+3. A benchmark was created for our classifiers.
+4. Classifiers were trained on our vectorized representation. The best among them was chosen.
+5. The final classifer was refined using hyperparameter optimization.
+6. The final tuned classifier was used to predict holdout and unseen random data.
+
+The project aspect that I found the most difficult was step 5. Given that I had to build a multi headed model, I was not sure how to go about hyperparameter optimization. It's only after I stumbled on the OneVsRestClassifier, was I able to solve this problem.
+
+The project aspect that I found the most interesting was the stacking of word and char features to create a new feature set that was then fed to the machine learning models. The use of char features was clever. People often try to obfuscate bad words with additional characters. Using character n-grams can potentially detect these.
+
+
+### **Improvements**
+
+An improvement that I would like to make is to use a Neural Network and Dense Word Embeddings to do this task. An advantage of using neural networks other machine learning algorithms is that neural network can take word order into account. However, this means that the input data cannot be structured using a bag of words or tfidf model. Instead every comment text would be represented as a vector of a fixed length: these vector representations are also called sequences. 
+
+Another improvement that could be done is instead of using unigrams, we can use bigrams in our vectorized representations. This will increase our feature space but will also help our models to further distinguish between different toxicity types.
+
+Yet another improvement that can be made is using lemmatization instead of stemming. Stemming usually refers to a crude heuristic process that chops off the ends of words in the hope of achieving this goal correctly most of the time, and often includes the removal of derivational affixes. Lemmatization usually refers to doing things properly with the use of a vocabulary and morphological analysis of words, normally aiming to remove inflectional endings only and to return the base or dictionary form of a word, which is known as the lemma.
 
 -----------
-
-**Before submitting, ask yourself. . .**
-
-- Does the project report you’ve written follow a well-organized structure similar to that of the project template?
-- Is each section (particularly **Analysis** and **Methodology**) written in a clear, concise and specific fashion? Are there any ambiguous terms or phrases that need clarification?
-- Would the intended audience of your project be able to understand your analysis, methods, and results?
-- Have you properly proof-read your project report to assure there are minimal grammatical and spelling mistakes?
-- Are all the resources used for this project correctly cited and referenced?
-- Is the code that implements your solution easily readable and properly commented?
-- Does the code execute without error and produce results similar to those reported?
