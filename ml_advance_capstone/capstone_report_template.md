@@ -1,6 +1,6 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Project
-### `Toxic Comment Classification on social media platforms`
+![Toxic](./images/toxic.png)
 
 Ishan Soni </br> 
 December 26th, 2018
@@ -48,20 +48,22 @@ There are many different metrics that could be used to evaluate the solution, gi
 
 Generally, if the class probability for a particular type of toxicity is > 0.5, we can label it as a toxic comment with that toxicity type. Therefore we can easily build a confusion matrix for each toxicity class.
 
-![Confusion Matrix](https://cdn-images-1.medium.com/max/1600/1*g5zpskPaxO8uSl0OWT4NTQ.png)
+![Confusion Matrix](./images/confusionMatrix.png)
 
 But since we are more interested in probabilities and we have defined our solution as : _Given a comment, the solution will be a machine learning model that receives as input the comment and outputs a class probabilty for every toxicity type_, an evaluation metric like the **AUC - ROC Curve (Area Under the Receiver Operating Characteristics)** makes more sense. AUC - ROC curve is a performance measurement for classification problems at various thresholds settings. ROC (Receiver Operating Characteristics) is a probability curve and its AUC(Area Under Curve) represents the degree or measure of separability. It tells us how much a given model is capable of distinguishing between classes. Higher the AUC, better the model is at predicting 0s as 0s and 1s as 1s.
 The ROC curve is plotted with TPR(True Positive Rate) against the FPR(False Positive Rate) where TPR is on the y-axis and FPR is on the the x-axis.
 
-![AUC-ROC](https://cdn-images-1.medium.com/max/1600/1*pk05QGzoWhCgRiiFbz-oKQ.png)
+![AUC-ROC](./images/aucroc.png)
 
-![TPR](https://cdn-images-1.medium.com/max/1600/1*HgxNKuUwXk9JHYBCt_KZNw.png)
+![TPR](./images/tpr.png)
 
-![Specificity](https://cdn-images-1.medium.com/max/1600/1*f7NmMcQtfes1ng7jtjNtHQ.png) 
+![Specificity](./images/specificity.png) 
+
+![FPR](./images/fpr.png)
 
 An excellent model has AUC near to 1 which means it has a good measure of separability. A poor model has AUC near to the 0 which means it has worst measure of separability. In fact it means it is reciprocating the result. It is predicting 0s as 1s and 1s as 0s. And when AUC is 0.5, it means our model has no class separation capacity whatsoever.
 
-![AUC](https://cdn-images-1.medium.com/max/1600/1*Uu-t4pOotRQFoyrfqEvIEg.png)
+![AUC](./images/auc.png)
 
 Since our models will output probabilities, the AUC-ROC which is based on probability distributions will prove to be the correct metric. We will be using the AUC-ROC score while we cross validate our models.
 
@@ -138,7 +140,7 @@ Each train observation corresponds to a different comment. There are a total of 
 The train and test dataset _do not_ contain any null values. </br>
 
 Sample Data : </br>
-![Sample Data](sampleTrain.png)
+![Sample Data](./images/sampleTrain.png)
 
 The distribution of different toxicity types are as follows : </br>
 <table>
@@ -176,37 +178,115 @@ The distribution of different toxicity types are as follows : </br>
             <td>0.8</td>
         </tr>
     </tbody>
-</table> </br></br></br>
+</table>
 
 
-### Exploratory Visualization
-In this section, you will need to provide some form of visualization that summarizes or extracts a relevant characteristic or feature about the data. The visualization should adequately support the data being used. Discuss why this visualization was chosen and how it is relevant. Questions to ask yourself when writing this section:
-- _Have you visualized a relevant characteristic or feature about the dataset or input data?_
-- _Is the visualization thoroughly analyzed and discussed?_
-- _If a plot is provided, are the axes, title, and datum clearly defined?_
+### **Exploratory Visualization**
 
-### Algorithms and Techniques
-In this section, you will need to discuss the algorithms and techniques you intend to use for solving the problem. You should justify the use of each one based on the characteristics of the problem and the problem domain. Questions to ask yourself when writing this section:
-- _Are the algorithms you will use, including any default variables/parameters in the project clearly defined?_
-- _Are the techniques to be used thoroughly discussed and justified?_
-- _Is it made clear how the input data or datasets will be handled by the algorithms and techniques chosen?_
+The below images shows the distribution of toxicity type in our train dataset.
 
-### Benchmark
-In this section, you will need to provide a clearly defined benchmark result or threshold for comparing across performances obtained by your solution. The reasoning behind the benchmark (in the case where it is not an established result) should be discussed. Questions to ask yourself when writing this section:
-- _Has some result or value been provided that acts as a benchmark for measuring performance?_
-- _Is it clear how this result or value was obtained (whether by data or by hypothesis)?_
+![Bar](./images/ToxicityOccurences.png) 
+![Pie](./images/ToxicityOccurencesPie.png)
+
+The above figures support our decision of building a multiheaded classification model. The distribution of toxicity types is very uneven. The toxicity is not evenly spread out across classes. Hence we might face class imbalance problems. </br>
+
+_Lets look at some common words for different toxicity types_
+
+1. <u>Common words in clean comments</u> :
+![cleanWC](./images/cleanWC.png)
+
+2. <u>Common words in toxic comments</u> :
+![toxicWC](./images/toxicWC.png)
+
+3. <u>Common words in severe toxic comments</u> :
+![stoxicWC](./images/stoxicWC.png)
+
+4. <u>Common words in obscene comments</u> :
+![obsceneWC](./images/obsceneWC.png)
+
+5. <u>Common words in threat comments</u> :
+![threatWC](./images/threatWC.png)
+
+6. <u>Common words in insult commnents</u> :
+![insultWC](./images/insultWC.png)
+
+7. <u>Common words in identity hate comments</u> :
+![idWC](./images/idWC.png)
+
+From the above visualizations, we can see the most common words for each toxicity type. Since this dataset is taken from wikipedia talk's page edits, we can see that wikipedia is a common term in all toxicity types and can be removed since it doesn't help us at all in our analysis. Also, we can see a few usernames in the words too. We should also clean them.
+
+
+### **Algorithms and Techniques**
+
+Since we have defined our solution as : _Given a comment, the solution will be a machine learning model that receives as input the comment and outputs a class probabilty for every toxicity type_, I will use machine learning algorithms that can output probabilities. I will be employing two algorithms to solve the problem : linear models and MultinomialNB (Naive Bayes classifier for multinomial models).
+
+The linear logistic regression will form my benchmark. I will also use it for my actual model. Linear logistic regression is a good benchmark because it is simple and does not require the tuning of many hyperparameters. It is also fast to train and robust to noisy data. The expectation is that the more complex Logistic Regression model (after hyperparameter optimization and feature transformations) and MultinomialNB model should achieve superior performances.
+
+Naive Bayes is a family of algorithms based on applying Bayes theorem with a strong(naive) assumption, that every feature is independent of the others, in order to predict the category of a given sample. They are probabilistic classifiers, therefore will calculate the probability of each category using Bayes theorem. The multinomial Naive Bayes classifier is suitable for classification with discrete features (e.g., word counts for text classification). The multinomial distribution normally requires integer feature counts. However, in practice, fractional counts such as tf-idf may also work. We do have other alternatives when coping with NLP problems, such as Support Vector Machine (SVM) and neural networks. However, the simple design of Naive Bayes classifiers make them very attractive for such classifiers. Moreover, they have been demonstrated to be fast, reliable and accurate in a number of applications of NLP.
+
+
+### **Benchmark**
+
+The linear logistic regression (LogisticRegression) from the sklearn.linear_model package will form my benchmark. Linear logistic regression is a good benchmark because it is simple and does not require the tuning of many hyperparameters. It is also fast to train and robust to noisy data. 
+
+This benchmark model is trained on a Bag of Words representation of our data. 
+
+The Bag Of Word representation was created during the sklearn.feature_extraction.text.CountVectorizer. It was instantiated using the following parameters
+
+| Argument     | Value  | Explanation                                                 |
+|--------------|--------|-------------------------------------------------------------|
+| min_df       | 5      | Only retain terms that appear in atleast 5 comments         |
+| ngram_range  | (1, 1) | Create ngrams of 1 word each                                |
+| max_features | 10000  | Only include the top 10000 terms ordered by term frequency. |
+
+We train this model on our bag of words representation and use cross validation to ensure our model is not overfit. The average cross-validated AUC-ROC score we get for this benchmark model on our train data is around **0.94**. This benchmark model gives us a Kaggle score of **0.9376**.
 
 
 ## III. Methodology
-_(approx. 3-5 pages)_
 
-### Data Preprocessing
-In this section, all of your preprocessing steps will need to be clearly documented, if any were necessary. From the previous section, any of the abnormalities or characteristics that you identified about the dataset will be addressed and corrected here. Questions to ask yourself when writing this section:
-- _If the algorithms chosen require preprocessing steps like feature selection or feature transformations, have they been properly documented?_
-- _Based on the **Data Exploration** section, if there were abnormalities or characteristics that needed to be addressed, have they been properly corrected?_
-- _If no preprocessing is needed, has it been made clear why?_
+### **Data Preprocessing**
 
-### Implementation
+Before we predict probabilities for each toxicity class using our machine learning algorithms, we need to convert our raw comment text into a form that can be consumed by these algorithms. Below are the two vectorized forms I have used :
+
+1. Bag of Words : In this model, a text (such as a sentence or a document) is represented as the bag (multiset) of its words, where the (frequency of) occurrence of each word is used as a feature for training a classifier. [Bag-of-words](https://en.wikipedia.org/wiki/Bag-of-words_model)
+
+2. Tfidf : TFIDF, short for term frequency–inverse document frequency, is a numerical statistic that is intended to reflect how important a word is to a document in a collection or corpus.
+[Tf-idf](https://en.wikipedia.org/wiki/Tf%E2%80%93idf)
+
+Both of these vectorized representations are very sparse matrices. Therefore we need to reduce the number of features we have in these representations by reducing our vocabulary. We do this by removing words that are not relevant and by converting different words that convey the same meaning into the single same word. 
+
+As identified during Data Exploration, there were a lot of / n's and a lot of usernames in our comment text. We have removed these unnecessary words during our Data Cleaning phase.</br></br></br></br>
+
+```python
+train['comment_text'] = train['comment_text'].map(lambda x: re.sub('\\n',' ',str(x)))
+
+train['comment_text'] = train['comment_text'].map(lambda x: re.sub("\[\[User.*",'',str(x)))
+```
+
+After this, we removed _stopwords_ from our comment text and performed _stemming_.
+_Stopwords_ are words like 'a', 'the', 'in' etc that occur very frequently in our data but do not contribute anything towards our analysis. 
+_Stemming_ is the process of reducing inflected (or sometimes derived) words to their word stem, base or root form. Eg love, loved and loving mean the same thing and performing a stem operation on them will reduce all of them into the same root form 'lov'. This will further reduce our vocab and reduce the matrix sparsity of our bag of words/ ngrams representations.
+
+The following function was used to remove stopwords and perform stemming :
+
+```python
+import string
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+
+# Stemmer
+from nltk.stem import SnowballStemmer
+s = SnowballStemmer("english")
+
+def cleanComment(comment):
+    comment = comment.translate(str.maketrans('', '', string.punctuation))
+    words = [s.stem(w.lower()) for w in word_tokenize(comment) if w.lower() not in stopwords.words("english")]
+    return " ".join(words)
+```
+
+
+### **Implementation**
+
 In this section, the process for which metrics, algorithms, and techniques that you implemented for the given data will need to be clearly documented. It should be abundantly clear how the implementation was carried out, and discussion should be made regarding any complications that occurred during this process. Questions to ask yourself when writing this section:
 - _Is it made clear how the algorithms and techniques were implemented with the given datasets or input data?_
 - _Were there any complications with the original metrics or techniques that required changing prior to acquiring a solution?_
